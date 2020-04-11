@@ -38,6 +38,7 @@ Cycle step | Red | Green | Blue
 13 | LOW | LOW | LOW |
 14 | LOW | LOW | LOW |
 15 | LOW | LOW | LOW |
+16 | LOW | LOW | LOW |
 
 
 The table above is one cycle. This will be done contiuously. Also to be noted that this is only for the color code given above.
