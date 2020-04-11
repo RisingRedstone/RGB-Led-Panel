@@ -19,9 +19,9 @@ We cannot use the PWM output directly, so we will use an internal clock which wi
 
 The format of a 12-bit color system that I've used here is **RRRR GGGG BBBB** (Where every character is a bit corresponding to it's color). From this we can tell that every color has 4-bit of data meaning there can be 16 brightness levels of a single colour. So we set a cycle with the value 16.
 
-Let's take an example for a pixel where we want to display the colour **0011 1000 1011**
+Let's take an example for a pixel where we want to display the colour **0011 1000 1011** : 
 
-Time Step | Red | Green | Blue
+Cycle step | Red | Green | Blue
 ----------|-----|-------|------
 1 | HIGH | HIGH | HIGH |
 2 | HIGH | HIGH | HIGH |
