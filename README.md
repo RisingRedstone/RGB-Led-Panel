@@ -41,3 +41,21 @@ Time Step | Red | Green | Blue
 
 
 The table above is one cycle. This will be done contiuously. Also to be noted that this is only for the color code given above.
+
+## Result
+
+![8-bit Colour spectrum](Images/ColorSpectrumBright.jpeg)
+
+This image represent 8-bit color with 256 total colors. I didn't display 12-bit colour here because there are 4096 total possible colours in 12-bit colour and the panel doesn't have that many pixels.
+
+
+![Super Mario](Images/Mario.jpeg)
+
+Here I've displayed Super Mario in 12-bit color but I don't think you can see it that well so I wanted to add a diffuser but as I cannot leave my house (Due to Coronavirus Lockdown), I used a sheet of paper instead.
+
+![Super Mario Diffused](Images/MarioWithFilter.jpeg)
+
+![Super Mario Original](Images/Mario Original.png)
+
+## End Note
+I don't think I explained how this works that well here so would probably give a much better explaination later along with better photos and a diffuser.
