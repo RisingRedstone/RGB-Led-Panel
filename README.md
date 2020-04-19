@@ -40,6 +40,13 @@ Cycle step | Red | Green | Blue
 15 | LOW | LOW | LOW |
 16 | LOW | LOW | LOW |
 
+Here,   the Red Led is switched on 18.75% of the time.
+       
+  The Blue Led is switched on 50% of the time.
+        
+  The Green Led is switched on 68.75% of the time.
+ 
+ This will give us a ochre-yellow colour.
 
 The table above is one cycle. This will be done contiuously. Also to be noted that this is only for the color code given above.
 
