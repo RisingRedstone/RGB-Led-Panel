@@ -52,7 +52,7 @@ The table above is one cycle. This will be done contiuously. Also to be noted th
 
 ## Better Brightness
 Okay so the above table is not the best way to set the birhgntess as there are long periods where the LEDs are switched off.
-So I created a brightess table which spaces the LEDs equally. The table is in Code/Src/main.c and is stored in the variable BrightnessTimestep.
+So I created a brightess table which spaces the LEDs equally. The table is in Code/Src/main.c and is stored in the variable *BrightnessTimestep*.
 
 ## Result
 
