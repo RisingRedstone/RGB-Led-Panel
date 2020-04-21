@@ -77,6 +77,25 @@ const uint8_t Sequence[64] = {
   0x1F, 0x1E, 0x1D, 0x1C, 0x1B, 0x1A, 0x19, 0x18
 };
 
+const uint16_t BrightnessTimestep[16] = {
+	0x0000,
+	0x0001,
+	0x0101,
+	0x0111,
+	0x1111,
+	0x1115,
+	0x1515,
+	0x1555,
+	0x5555,
+	0x555D,
+	0x5D5D,
+	0x5DDD,
+	0x7DDD,
+	0x7DDF,
+	0x7FDF,
+	0x7FFF
+};
+
 uint16_t *MarioVid[2];
 
 const uint8_t ra[] = {0, 1, 0, 1};
@@ -357,64 +376,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	}
 }
 
-
-void uploadMatrix1(){
-	//HAL_TIM_Base_Stop_IT(&htim2);
-	
-	if(count == 16){
-		Ready = true;
-		count = 0;
-	}
-	
-	uint8_t row;
-	for(row = 0; row < 4; row ++){
-		
-		HAL_GPIO_WritePin(A_pin_GPIO_Port, (A_pin_Pin * ra[row]) | (B_pin_Pin * rb[row]), GPIO_PIN_SET);
-		HAL_GPIO_WritePin(A_pin_GPIO_Port, (A_pin_Pin * !ra[row]) | (B_pin_Pin * !rb[row]), GPIO_PIN_RESET);
-		
-		WritePin1(row);
-			
-		HAL_GPIO_WritePin(LAT_pin_GPIO_Port, LAT_pin_Pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(LAT_pin_GPIO_Port, LAT_pin_Pin, GPIO_PIN_RESET);
-		
-		HAL_GPIO_WritePin(OE_pin_GPIO_Port, OE_pin_Pin, GPIO_PIN_RESET);
-		uint16_t q;
-		for(q = 0;q < 10; q++)
-			__NOP();
-		HAL_GPIO_WritePin(OE_pin_GPIO_Port, OE_pin_Pin, GPIO_PIN_SET);
-	}
-	
-	count++;
-	//HAL_TIM_Base_Start_IT(&htim2);
-}
-
-
-void uploadMatrix2(){
-	//HAL_TIM_Base_Stop_IT(&htim2);
-	Ready = false;
-	for(count = 0; count < 16; count++){
-		uint8_t row;
-		for(row = 0; row < 4; row ++){
-			
-			HAL_GPIO_WritePin(A_pin_GPIO_Port, (A_pin_Pin * ra[row]) | (B_pin_Pin * rb[row]), GPIO_PIN_SET);
-			HAL_GPIO_WritePin(A_pin_GPIO_Port, (A_pin_Pin * !ra[row]) | (B_pin_Pin * !rb[row]), GPIO_PIN_RESET);
-			
-			WritePin1(row);
-				
-			HAL_GPIO_WritePin(LAT_pin_GPIO_Port, LAT_pin_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(LAT_pin_GPIO_Port, LAT_pin_Pin, GPIO_PIN_RESET);
-			
-			HAL_GPIO_WritePin(OE_pin_GPIO_Port, OE_pin_Pin, GPIO_PIN_RESET);
-			uint16_t q;
-			for(q = 0;q < 20; q++)
-				__NOP();
-			HAL_GPIO_WritePin(OE_pin_GPIO_Port, OE_pin_Pin, GPIO_PIN_SET);
-		}
-	}
-	Ready = true;
-	//HAL_TIM_Base_Start_IT(&htim2);
-}
-
 void uploadMatrix3(){
 	//HAL_TIM_Base_Stop_IT(&htim2);
 	Ready = false;
@@ -451,6 +412,7 @@ void WritePin1(uint8_t row){
 	
 	uint16_t T;
 	uint16_t B;
+	uint8_t count_t = 1 << count;
 	
 	uint16_t pinData;
 	
@@ -463,12 +425,12 @@ void WritePin1(uint8_t row){
 		B = *(buffer + pos + 256);
 		
 		pinData = 0x0000;
-		pinData |= (R1_pin_Pin * (count < ((T & 0x0F00) >> 8)));
-		pinData |= (B1_pin_Pin * (count < (T & 0x000F)));
-		pinData |= (G1_pin_Pin * (count < ((T & 0x00F0) >> 4)));
-		pinData |= (R2_pin_Pin * (count < ((B & 0x0F00) >> 8)));
-		pinData |= (B2_pin_Pin * (count < (B & 0x000F)));
-		pinData |= (G2_pin_Pin * (count < ((B & 0x00F0) >> 4)));
+		pinData |= (R1_pin_Pin * !!(BrightnessTimestep[((T & 0x0F00) >> 8)] & count_t));
+		pinData |= (B1_pin_Pin * !!(BrightnessTimestep[(T & 0x000F)] & count_t));
+		pinData |= (G1_pin_Pin * !!(BrightnessTimestep[((T & 0x00F0) >> 4)] & count_t));
+		pinData |= (R2_pin_Pin * !!(BrightnessTimestep[((B & 0x0F00) >> 8)] & count_t));
+		pinData |= (B2_pin_Pin * !!(BrightnessTimestep[(B & 0x000F)] & count_t));
+		pinData |= (G2_pin_Pin * !!(BrightnessTimestep[((B & 0x00F0) >> 4)] & count_t));
 		
 		HAL_GPIO_WritePin(R1_pin_GPIO_Port, pinData, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(R1_pin_GPIO_Port, (~pinData & pinCount), GPIO_PIN_RESET);
