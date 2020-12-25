@@ -3,9 +3,9 @@ This project is about using a 3-bit rgb led panel to display images with higher 
 
 ## Setup
 
-Here, I'm using stm32f103c8t6 microcontroller because it has 72 MHz internal clock and about the same speed for the eternal GPIOs. This is required for fast refresh rate of the led panel which we will require to display 12 bit colour. (You can probably go higher than that but I'll stop at 12 bit colour)
+Here, I'm using stm32f103c8t6 microcontroller because it has 72 MHz internal clock and about the same speed for the external GPIOs. This is required for fast refresh rate of the led panel which we will require to display 12 bit colour. (You can probably go higher than that but I'll stop at 12 bit colour)
 
-Because the stm32f103c8xx is 3.3v, we have to convert that to 5.0v for the rgb led panel. To do that, I used a 3.3v to 5v logic level converter. For now however I've used a couple of buffers and AND gates because of the coronavirus lockdown in my country.
+Because the stm32f103c8xx is 3.3v, we have to convert that to 5.0v for the rgb led panel. To do that, I used a 3.3v to 5v logic level converter.
 
 I won't show the connections of microcontroller to the panel because the pinout can vary depending upon the manufacturer. I had to reverse engineer mine to know its connections.
 
@@ -13,9 +13,9 @@ I won't show the connections of microcontroller to the panel because the pinout 
 
 Now we discuss how to display 12-bit colour on a 3-bit display. *(BTW by 3-bit I mean that the display can display only 8 colours black, white, red, blue, green, cyan, magenta, orange by default)* 
 
-This is most probably not a new thing but what we are going to do use use sort of PWM techniques to switch LEDs on and off some percentage of the time to so that it appears dimmer. We can do that if we connect an LED to one of the PWM outputs of an arduino and run a PWM signal though it, with that by just changing the percentage of the time the LED is switched on, if we do it fast enough, the LED would appear dim to us. We are going to use the same technique here.
+This is most probably not a new thing but what we are going to do use use a sort of PWM technique to switch LEDs on and off some percentage of the time to so that it appears dimmer. We can do that if we connect an LED to one of the PWM outputs of an arduino and run a PWM signal though it, with that by just changing the percentage of the time the LED is switched on, if we do it fast enough, the LED would appear dim to us. We are going to use the same technique here.
 
-We cannot use the PWM output directly, so we will use an internal clock which will call the display function every fixed period of time. In my case, I've set it to run ever 200 micro seconds. Meaning we have a 5000Hz display. Now some may be thinking this is completely unnecessary, and you're probably right. But I did this anyways and it works. I also checked the datasheet of the rgb led panel andfound that it can support higher refresh rates than that.
+We cannot use the PWM output directly, so we will use an internal clock which will call the display function every fixed period of time. In my case, I've set it to run ever 200 micro seconds. Meaning we have a 5000Hz display. Now some may be thinking this is completely unnecessary, and you're probably right. But I did this anyways and it works. I also checked the datasheet of the rgb led panel and found that it can support higher refresh rates than that.
 
 The format of a 12-bit color system that I've used here is **RRRR GGGG BBBB** (Where every character is a bit corresponding to it's color). From this we can tell that every color has 4-bit of data meaning there can be 16 brightness levels of a single colour. So we set a cycle with the value 16.
 
@@ -51,8 +51,8 @@ Here,   the Red Led is switched on 18.75% of the time.
 The table above is one cycle. This will be done contiuously. Also to be noted that this is only for the color code given above.
 
 ### Better Brightness
-Okay so the table above is not the best way to set the birhgntess as there are long periods where the LEDs are switched off.
-So I created a brightess table which spaces the LEDs equally. The table is in Code/Src/main.c and is stored in the variable *BrightnessTimestep*.
+Okay so the table above is not the best way to set the brightness as there are long periods where the LEDs are switched off.
+So I created a brightness table which spaces the LEDs equally. The table is in Code/Src/main.c and is stored in the variable *BrightnessTimestep*.
 
 ## Result
 
